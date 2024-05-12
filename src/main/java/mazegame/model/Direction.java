@@ -28,7 +28,6 @@ public enum Direction {
      * @param rowChange the change in the row coordinate
      * @param colChange the change in the column coordinate
      */
-
     public static Direction of(int rowChange, int colChange) {
         for (var direction : values()) {
             if (direction.rowChange == rowChange && direction.colChange == colChange) {
