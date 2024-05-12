@@ -19,7 +19,8 @@ public class Maps {
 
     private final List<MapData> maps = new ArrayList<>();
 
-    private Maps() {}
+    private Maps() {
+    }
 
     public static Maps getInstance() {
         if (instance == null) {
@@ -64,4 +65,5 @@ public class Maps {
             throw new RuntimeException("Error loading maps", e);
         }
     }
+}
 
