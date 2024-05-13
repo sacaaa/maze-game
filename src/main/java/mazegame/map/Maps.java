@@ -2,7 +2,7 @@ package mazegame.map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
-import mazegame.Main;
+import mazegame.console.Main;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
