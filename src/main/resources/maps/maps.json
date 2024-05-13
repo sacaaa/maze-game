@@ -49,7 +49,7 @@
             "wallBottom": false,
             "wallLeft": false,
             "start": false,
-            "end": false,
+            "end": true,
             "monster": false
           },
           {
@@ -58,7 +58,7 @@
             "wallBottom": false,
             "wallLeft": true,
             "start": false,
-            "end": true,
+            "end": false,
             "monster": false
           }
         ],
