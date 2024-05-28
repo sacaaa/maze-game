@@ -1,13 +1,13 @@
 package mazegame.model;
 
+import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import lombok.Getter;
 import mazegame.map.Block;
 import mazegame.map.Maps;
 import puzzle.State;
 
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Represents the state of the game.
@@ -23,12 +23,14 @@ public class GameState implements State<Direction> {
     /**
      * The index of the current map.
      */
-    private final int mapIndex = 1;
+    private final int mapIndex;
 
     /**
      * The positions of the player, monster, and end.
      */
-    private Position[] positions;
+    private final ReadOnlyObjectWrapper<Position>[] positions;
+
+    private final ReadOnlyBooleanWrapper solved;
 
     /**
      * The index of the player in the positions array.
@@ -50,10 +52,13 @@ public class GameState implements State<Direction> {
      *
      * @param maps the maps of the game
      */
-    public GameState(Maps maps) {
+    public GameState(Maps maps, int mapIndex) {
         this.maps = maps;
-        this.positions = new Position[3];
+        this.mapIndex = mapIndex;
+        this.positions = new ReadOnlyObjectWrapper[3];
         init();
+        this.solved = new ReadOnlyBooleanWrapper();
+        this.solved.bind(this.positions[PLAYER].isEqualTo(this.positions[END]));
     }
 
     /**
@@ -67,39 +72,18 @@ public class GameState implements State<Direction> {
                 var block = map.blocks().get(i).get(j);
 
                 if (block.start()) {
-                    positions[PLAYER] = new Position(i, j);
+                    positions[PLAYER] = new ReadOnlyObjectWrapper<>(new Position(i, j));
                 } else if (block.end()) {
-                    positions[END] = new Position(i, j);
+                    positions[END] = new ReadOnlyObjectWrapper<>(new Position(i, j));
                 } else if (block.monster()) {
-                    positions[MONSTER] = new Position(i, j);
+                    positions[MONSTER] = new ReadOnlyObjectWrapper<>(new Position(i, j));
                 }
             }
         }
     }
 
     public Position getPosition(int index) {
-        return positions[index];
-    }
-
-    public void printState() {
-        var map = maps.getMap(mapIndex);
-
-        for (int i = 0; i < map.rows(); i++) {
-            for (int j = 0; j < map.cols(); j++) {
-                var position = new Position(i, j);
-
-                if (position.equals(getPosition(PLAYER))) {
-                    System.out.print("P ");
-                } else if (position.equals(getPosition(MONSTER))) {
-                    System.out.print("M ");
-                } else if (position.equals(getPosition(END))) {
-                    System.out.print("E ");
-                } else {
-                    System.out.print(map.blocks().get(i).get(j) + " ");
-                }
-            }
-            System.out.println();
-        }
+        return positions[index].get();
     }
 
     @Override
@@ -173,7 +157,11 @@ public class GameState implements State<Direction> {
     @Override
     public void makeMove(Direction direction) {
         if (isLegalMove(direction)) {
-            positions[PLAYER] = getPosition(PLAYER).move(direction);
+            positions[PLAYER].set(positions[PLAYER].get().move(direction));
+
+            if (getPosition(PLAYER).equals(getPosition(MONSTER))) {
+                init();
+            }
         }
     }
 
@@ -190,14 +178,11 @@ public class GameState implements State<Direction> {
 
     @Override
     public GameState clone() {
-        GameState copy;
-        try {
-            copy = (GameState) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
-        copy.positions = positions.clone();
-        return copy;
+        var clone = new GameState(maps, mapIndex);
+        clone.positions[PLAYER].set(getPosition(PLAYER));
+        clone.positions[MONSTER].set(getPosition(MONSTER));
+        clone.positions[END].set(getPosition(END));
+        return clone;
     }
 
     @Override
@@ -205,11 +190,23 @@ public class GameState implements State<Direction> {
         if (o == this) {
             return true;
         }
-        return (o instanceof GameState other) && Arrays.equals(positions, other.positions);
+        return (o instanceof GameState other)
+                && getPosition(PLAYER).equals(other.getPosition(PLAYER))
+                && getPosition(END).equals(other.getPosition(END))
+                && getPosition(MONSTER).equals(other.getPosition(MONSTER));
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(positions);
+        return Objects.hash(getPosition(PLAYER), getPosition(END), getPosition(MONSTER));
+    }
+
+    @Override
+    public String toString() {
+        var sj = new StringJoiner(",", "[", "]");
+        for (var position : positions) {
+            sj.add(position.get().toString());
+        }
+        return sj.toString();
     }
 }
