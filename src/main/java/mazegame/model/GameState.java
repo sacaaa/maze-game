@@ -1,9 +1,12 @@
 package mazegame.model;
 
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.scene.transform.MatrixType;
 import lombok.Getter;
 import mazegame.map.Block;
+import mazegame.map.MapData;
 import mazegame.map.Maps;
 import puzzle.State;
 
@@ -82,8 +85,16 @@ public class GameState implements State<Direction> {
         }
     }
 
+    public ReadOnlyBooleanProperty solvedProperty() {
+        return solved.getReadOnlyProperty();
+    }
+
     public Position getPosition(int index) {
         return positions[index].get();
+    }
+
+    public MapData getCurrentMap() {
+        return maps.getMap(mapIndex);
     }
 
     @Override
@@ -209,4 +220,5 @@ public class GameState implements State<Direction> {
         }
         return sj.toString();
     }
+
 }
