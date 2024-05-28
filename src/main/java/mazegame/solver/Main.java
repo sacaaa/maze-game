@@ -14,7 +14,7 @@ public class Main {
 
         // Solve the game
         var bfs = new BreadthFirstSearch<Direction>();
-        bfs.solveAndPrintSolution(new GameState(maps));
+        bfs.solveAndPrintSolution(new GameState(maps, 1));
     }
 
 }
