@@ -22,6 +22,7 @@
         <javafx.version>22.0.1</javafx.version>
         <junit.jupiter.version>5.10.2</junit.jupiter.version>
         <jacoco.version>0.8.12</jacoco.version>
+        <tinylog.version>2.7.0</tinylog.version>
         <maven.checkstyle.version>3.3.1</maven.checkstyle.version>
         <maven.surefire.version>3.2.5</maven.surefire.version>
         <exec.mainClass><!-- TODO: the fully-qualified class name of your class that contains the main() method to launch the application --></exec.mainClass>
@@ -32,6 +33,18 @@
             <artifactId>homework-project-utils</artifactId>
             <version>1.0.0</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.tinylog</groupId>
+            <artifactId>tinylog-api</artifactId>
+            <version>${tinylog.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.tinylog</groupId>
+            <artifactId>tinylog-impl</artifactId>
+            <version>${tinylog.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
