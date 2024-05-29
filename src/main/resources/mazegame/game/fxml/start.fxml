@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:controller="mazegame.game.controller.StartController" alignment="CENTER" spacing="20" xmlns:fx="http://javafx.com/fxml">
+    <TextField fx:id="playerNameField" promptText="Enter player name"/>
+    <Button fx:id="startGameButton" text="Start Game"/>
+</VBox>
