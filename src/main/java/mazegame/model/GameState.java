@@ -2,6 +2,7 @@ package mazegame.model;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import lombok.Getter;
 import mazegame.map.Block;
@@ -322,7 +323,7 @@ public class GameState implements State<Direction> {
 
                 if (getPosition(PLAYER).equals(getPosition(MONSTER))) {
                     Logger.info("Game over");
-                    init();
+                    //init();
                 }
             }
         }
@@ -335,6 +336,16 @@ public class GameState implements State<Direction> {
      */
     public ReadOnlyBooleanProperty solvedProperty() {
         return solved.getReadOnlyProperty();
+    }
+
+    /**
+     * Gets the position of the character at the specified index as a read-only object property.
+     *
+     * @param index the index of the character
+     * @return the position of the character as a read-only object property
+     */
+    public ReadOnlyObjectProperty<Position> positionProperty(int index) {
+        return positions[index].getReadOnlyProperty();
     }
 
     /**
