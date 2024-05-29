@@ -3,7 +3,6 @@ package mazegame.solver;
 import mazegame.map.Maps;
 import mazegame.model.Direction;
 import mazegame.model.GameState;
-import puzzle.solver.BreadthFirstSearch;
 
 import java.util.Scanner;
 
@@ -11,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
         // Load the maps
-        Maps.loadMaps("/maps/maps.json");
+        Maps.loadMaps("/mazegame/map/maps.json");
         var maps = Maps.getInstance();
 
         // Solve the game
