@@ -1,0 +1,7 @@
+.root {
+    -fx-font-size: 14;
+}
+
+#steps, #duration {
+    -fx-alignment: center;
+}
