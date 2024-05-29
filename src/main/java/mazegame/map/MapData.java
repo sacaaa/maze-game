@@ -1,7 +1,6 @@
 package mazegame.map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
 
 import java.util.List;
 
