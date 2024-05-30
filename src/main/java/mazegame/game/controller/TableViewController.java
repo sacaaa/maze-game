@@ -32,15 +32,19 @@ public class TableViewController {
     private TableColumn<OnePlayerGameResult, Integer> numberOfMoves;
 
     @FXML
+    public TableColumn<OnePlayerGameResult, Boolean> solved;
+
+    @FXML
     private TableColumn<OnePlayerGameResult, String> duration;
 
     @FXML
     private TableColumn<OnePlayerGameResult, String> created;
 
     @FXML
-    private void initialize() throws IOException, URISyntaxException {
+    private void initialize() throws IOException {
         playerName.setCellValueFactory(new PropertyValueFactory<>("playerName"));
         numberOfMoves.setCellValueFactory(new PropertyValueFactory<>("numberOfMoves"));
+        solved.setCellValueFactory(new PropertyValueFactory<>("solved"));
         duration.setCellValueFactory(
                 cellData -> {
                     var duration = cellData.getValue().getDuration();
@@ -54,7 +58,7 @@ public class TableViewController {
                 }
         );
         ObservableList<OnePlayerGameResult> observableList = FXCollections.observableArrayList();
-        observableList.addAll(new JsonOnePlayerGameResultManager(Path.of(getClass().getResource("/results.json").toURI())).getBestByNumberOfMoves(NUMBER_OF_ROWS_TO_SHOW));
+        observableList.addAll(new JsonOnePlayerGameResultManager(Path.of("results.json")).getBestByNumberOfMoves(NUMBER_OF_ROWS_TO_SHOW));
         tableView.setItems(observableList);
     }
 
