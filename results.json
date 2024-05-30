@@ -1,0 +1,13 @@
+[ {
+  "duration" : 3.000000000,
+  "created" : "2024-05-30T15:32:54.3391697Z",
+  "playerName" : "Teszt1",
+  "solved" : true,
+  "numberOfMoves" : 4
+}, {
+  "duration" : 3.000000000,
+  "created" : "2024-05-30T15:34:17.0043294Z",
+  "playerName" : "Teszt2",
+  "solved" : false,
+  "numberOfMoves" : 4
+} ]
