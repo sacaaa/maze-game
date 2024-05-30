@@ -2,6 +2,6 @@
     -fx-font-size: 14;
 }
 
-#steps, #duration {
+#steps, #duration, #solved {
     -fx-alignment: center;
 }
