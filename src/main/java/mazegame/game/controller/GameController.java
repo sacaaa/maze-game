@@ -39,6 +39,16 @@ public class GameController {
             "monster.png");
 
     /**
+     * The number of moves.
+     */
+    private final IntegerProperty numberOfMoves = new SimpleIntegerProperty(0);
+
+    /**
+     * The game state.
+     */
+    private GameState state;
+
+    /**
      * The grid pane to display the map.
      */
     @FXML
@@ -50,66 +60,11 @@ public class GameController {
     @FXML
     private TextField numberOfMovesField;
 
+    /**
+     * The text field to display the name of the player.
+     */
     @FXML
     private Label playerNameLabel;
-
-    /**
-     * The game state.
-     */
-    private GameState state;
-
-    /**
-     * The number of moves.
-     */
-    private final IntegerProperty numberOfMoves = new SimpleIntegerProperty(0);
-
-    /**
-     * Initializes the controller class.
-     */
-    @FXML
-    private void initialize() {
-        playerNameLabel.setText("Player: Lajos");
-        bindNumberOfMoves();
-        registerKeyEventHandler();
-        restartGame();
-    }
-
-    /**
-     * Restarts the game.
-     */
-    private void restartGame() {
-        createState();
-        numberOfMoves.set(0);
-        initMap();
-    }
-
-    /**
-     * Creates the game state.
-     */
-    private void createState() {
-        // Load the maps
-        Maps.loadMaps("/mazegame/map/maps.json");
-        var maps = Maps.getInstance();
-
-        state = new GameState(maps, 1);
-        state.solvedProperty().addListener(this::handleSolved);
-    }
-
-
-    /**
-     * Initializes the map.
-     */
-    private void initMap() {
-        var map = state.getCurrentMap();
-        grid.getChildren().clear();  // Clear the existing cells
-
-        for (var row = 0; row < grid.getRowCount(); row++) {
-            for (var col = 0; col < grid.getColumnCount(); col++) {
-                var square = createSquare(row, col, map.blocks().get(row).get(col));
-                grid.add(square, col, row);
-            }
-        }
-    }
 
     /**
      * Handles the key press event.
@@ -157,82 +112,67 @@ public class GameController {
     }
 
     /**
-     * Gets the direction from the click.
-     *
-     * @param row the row of the click
-     * @param col the column of the click
-     * @return an optional direction
+     * Initializes the controller class.
      */
-    private Optional<Direction> getDirectionFromClick(int row, int col) {
-        var positionOfBlock = state.getPosition(GameState.PLAYER);
-        try {
-            return Optional.of(Direction.of(row - positionOfBlock.row(), col - positionOfBlock.col()));
-        } catch (IllegalArgumentException e) {
-            // The click does not correspond to any of the four directions
-        }
-        return Optional.empty();
-    }
-
-    /**
-     * Makes a move if it is legal.
-     *
-     * @param direction the direction to move
-     */
-    private void makeMoveIfLegal(Direction direction) {
-        if (state.isLegalMove(direction)) {
-            Logger.info("Moving {}", direction);
-            state.makeMove(direction);
-            Logger.trace("New state after move: {}", state);
-            numberOfMoves.set(numberOfMoves.get() + 1);
-
-            // Check if the player and monster are on the same position
-            if (state.getPosition(GameState.PLAYER).equals(state.getPosition(GameState.MONSTER))) {
-                Logger.info("Game over");
-                Platform.runLater(this::showGameOverAlert);
-            }
-        } else {
-            Logger.warn("Illegal move: {}", direction);
-        }
-    }
-
-    /**
-     * Handles the solved property change.
-     *
-     * @param observableValue the observable value
-     * @param oldValue the old value
-     * @param newValue the new value
-     */
-    private void handleSolved(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
-        if (newValue) {
-            Platform.runLater(this::showSolvedAlert);
-        }
-    }
-
-    /**
-     * Shows the game over alert.
-     */
-    private void showGameOverAlert() {
-        var alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText("Game Over");
-        alert.setContentText("You have been caught by the monster. Game Over!");
-        alert.showAndWait();
+    @FXML
+    private void initialize() {
+        bindNumberOfMoves();
+        registerKeyEventHandler();
         restartGame();
     }
 
     /**
-     * Shows the solved alert.
+     * Binds the number of moves to the text field.
      */
-    private void showSolvedAlert() {
-        var alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText("Game Solved");
-        alert.setContentText("Congratulations, you have escaped the maze!");
-        alert.showAndWait();
+    private void bindNumberOfMoves() {
+        numberOfMovesField.textProperty().bind(numberOfMoves.asString());
+    }
 
-        try {
-            MainApplication.getInstance().switchScene("/mazegame/game/fxml/leaderboard.fxml");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    /**
+     * Creates a binding to check if the piece is on the position.
+     *
+     * @param index the index of the piece
+     * @param row the row of the position
+     * @param col the column of the position
+     * @return the binding
+     */
+    private BooleanBinding createBindingToCheckPieceIsOnPosition(int index, int row, int col) {
+        return new BooleanBinding() {
+            {
+                super.bind(state.positionProperty(index));
+            }
+            @Override
+            protected boolean computeValue() {
+                var position = state.getPosition(index);
+                return position.row() == row && position.col() == col;
+            }
+        };
+    }
+
+    /**
+     * Creates an image view for the piece on the position.
+     *
+     * @param index the index of the piece
+     * @param row the row of the position
+     * @param col the column of the position
+     * @return the image view
+     */
+    private ImageView createImageViewForPieceOnPosition(int index, int row, int col) {
+        var imageView = new ImageView(imageStorage.get(index).orElseThrow());
+        imageView.visibleProperty().bind(createBindingToCheckPieceIsOnPosition(index, row, col));
+        return imageView;
+    }
+
+    /**
+     * Creates the game state.
+     */
+    private void createState() {
+        // Load the maps
+        Maps.loadMaps("/mazegame/map/maps.json");
+        var maps = Maps.getInstance();
+
+        state = new GameState(maps, 1);
+        state.solvedProperty().addListener(this::handleSolved);
     }
 
     /**
@@ -273,45 +213,91 @@ public class GameController {
     }
 
     /**
-     * Creates an image view for the piece on the position.
+     * Saves the result and switches to the leaderboard scene.
      *
-     * @param index the index of the piece
-     * @param row the row of the position
-     * @param col the column of the position
-     * @return the image view
+     * @param solved whether the game was solved
      */
-    private ImageView createImageViewForPieceOnPosition(int index, int row, int col) {
-        var imageView = new ImageView(imageStorage.get(index).orElseThrow());
-        imageView.visibleProperty().bind(createBindingToCheckPieceIsOnPosition(index, row, col));
-        return imageView;
+    private void endGame(boolean solved) {
+        try {
+            MainApplication.getInstance().saveResult(solved, numberOfMoves.get());
+            MainApplication.getInstance().switchScene("/mazegame/game/fxml/leaderboard.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     * Creates a binding to check if the piece is on the position.
+     * Handles the solved property change.
      *
-     * @param index the index of the piece
-     * @param row the row of the position
-     * @param col the column of the position
-     * @return the binding
+     * @param observableValue the observable value
+     * @param oldValue the old value
+     * @param newValue the new value
      */
-    private BooleanBinding createBindingToCheckPieceIsOnPosition(int index, int row, int col) {
-        return new BooleanBinding() {
-            {
-                super.bind(state.positionProperty(index));
-            }
-            @Override
-            protected boolean computeValue() {
-                var position = state.getPosition(index);
-                return position.row() == row && position.col() == col;
-            }
-        };
+    private void handleSolved(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
+        if (newValue) {
+            Platform.runLater(() -> showAlert(
+                    Alert.AlertType.INFORMATION,
+                    "Game Solved",
+                    "Congratulations, you have escaped the maze!",
+                    true));
+        }
     }
 
     /**
-     * Binds the number of moves to the text field.
+     * Initializes the map.
      */
-    private void bindNumberOfMoves() {
-        numberOfMovesField.textProperty().bind(numberOfMoves.asString());
+    private void initMap() {
+        var map = state.getCurrentMap();
+        grid.getChildren().clear();  // Clear the existing cells
+
+        for (var row = 0; row < grid.getRowCount(); row++) {
+            for (var col = 0; col < grid.getColumnCount(); col++) {
+                var square = createSquare(row, col, map.blocks().get(row).get(col));
+                grid.add(square, col, row);
+            }
+        }
+    }
+
+    /**
+     * Gets the direction from the click.
+     *
+     * @param row the row of the click
+     * @param col the column of the click
+     * @return an optional direction
+     */
+    private Optional<Direction> getDirectionFromClick(int row, int col) {
+        var positionOfBlock = state.getPosition(GameState.PLAYER);
+        try {
+            return Optional.of(Direction.of(row - positionOfBlock.row(), col - positionOfBlock.col()));
+        } catch (IllegalArgumentException e) {
+            // The click does not correspond to any of the four directions
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Makes a move if it is legal.
+     *
+     * @param direction the direction to move
+     */
+    private void makeMoveIfLegal(Direction direction) {
+        if (state.isLegalMove(direction)) {
+            Logger.info("Moving {}", direction);
+            state.makeMove(direction);
+            Logger.trace("New state after move: {}", state);
+            numberOfMoves.set(numberOfMoves.get() + 1);
+
+            if (state.getPosition(GameState.PLAYER).equals(state.getPosition(GameState.MONSTER))) {
+                Logger.info("Game over");
+                Platform.runLater(() -> showAlert(
+                        Alert.AlertType.INFORMATION,
+                        "Game Over",
+                        "You have been caught by the monster. Game Over!",
+                        false));
+            }
+        } else {
+            Logger.warn("Illegal move: {}", direction);
+        }
     }
 
     /**
@@ -319,6 +305,33 @@ public class GameController {
      */
     private void registerKeyEventHandler() {
         Platform.runLater(() -> grid.getScene().setOnKeyPressed(this::handleKeyPress));
+    }
+
+    /**
+     * Restarts the game.
+     */
+    private void restartGame() {
+        createState();
+        numberOfMoves.set(0);
+        playerNameLabel.setText("Player: " + MainApplication.getInstance().getPlayerName());
+        initMap();
+    }
+
+    /**
+     * Shows an alert by the given parameters.
+     * Shows when the game is solved or the player is caught by the monster.
+     *
+     * @param alertType the type of the alert
+     * @param headerText the header text of the alert
+     * @param contentText the content text of the alert
+     * @param solved whether the game is solved
+     */
+    private void showAlert(Alert.AlertType alertType, String headerText, String contentText, boolean solved) {
+        var alert = new Alert(alertType);
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+        alert.showAndWait();
+        endGame(solved);
     }
 
 }
