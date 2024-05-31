@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>hu.unideb.inf</groupId>
     <artifactId>homework-template-project</artifactId>
@@ -173,11 +173,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>${maven.surefire.version}</version>
-            </plugin>
-            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
@@ -193,11 +188,11 @@
     </reporting>
     <repositories>
         <repository>
-            <id>github-repo1</id>
+            <id>github1</id>
             <url>https://maven.pkg.github.com/INBPM0420L/homework-project-utils</url>
         </repository>
         <repository>
-            <id>github-repo2</id>
+            <id>github2</id>
             <url>https://maven.pkg.github.com/INBPM0420L/game-result-manager</url>
         </repository>
     </repositories>
