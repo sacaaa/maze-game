@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 public class Maps {
@@ -19,30 +20,11 @@ public class Maps {
 
     private final List<MapData> maps = new ArrayList<>();
 
-    private Maps() {
-    }
-
     public static Maps getInstance() {
         if (instance == null) {
             throw new IllegalStateException("Maps not loaded");
         }
         return instance;
-    }
-
-    public void addMap(MapData map) {
-        if (maps.contains(map)) {
-            throw new IllegalArgumentException("The map already exists");
-        }
-
-        maps.add(map);
-    }
-
-    public void removeMap(MapData map) {
-        if (!maps.contains(map)) {
-            throw new IllegalArgumentException("The map does not exist");
-        }
-
-        maps.remove(map);
     }
 
     public MapData getMap(int id) {
@@ -57,7 +39,7 @@ public class Maps {
 
     public static void loadMaps(String filePath) {
         try {
-            Path resourcePath = Paths.get(Main.class.getResource(filePath).toURI());
+            Path resourcePath = Paths.get(Objects.requireNonNull(Main.class.getResource(filePath)).toURI());
             String jsonContent = Files.readString(resourcePath);
             ObjectMapper objectMapper = new ObjectMapper();
             instance = objectMapper.readValue(jsonContent, Maps.class);
