@@ -128,7 +128,7 @@ public record Block(boolean wallTop, boolean wallRight, boolean wallBottom, bool
 
     @Override
     public String toString() {
-        return String.format("Block{wallTop=%s, wallRight=%s, wallBottom=%s, wallLeft=%s," +
+        return String.format("Block{wallTop=%s, wallRight=%s, wallBottom=%s, wallLeft=%s, " +
                              "start=%s, end=%s, monster=%s}",
                 wallTop, wallRight, wallBottom, wallLeft, start, end, monster);
     }
