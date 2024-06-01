@@ -3,7 +3,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:controller="mazegame.game.controller.StartController" alignment="CENTER" spacing="20" xmlns:fx="http://javafx.com/fxml">
-    <TextField fx:id="playerNameField" promptText="Enter player name"/>
+<VBox fx:controller="mazegame.game.controller.StartController" alignment="CENTER" spacing="10" maxHeight="-Infinity" maxWidth="-Infinity"
+      minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" stylesheets="@../css/start.css"
+      prefWidth="150.0"  xmlns:fx="http://javafx.com/fxml">
+    <Label text="Enter your name"/>
+    <TextField fx:id="playerNameField" promptText="Name..."/>
     <Button fx:id="startGameButton" text="Start Game"/>
 </VBox>
