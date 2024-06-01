@@ -26,7 +26,7 @@ public class OrdinalImageStorage implements ImageStorage<Integer> {
     public OrdinalImageStorage(Class<?> c, String... resourceNames) {
         images = new Image[resourceNames.length];
         for (var i = 0; i < resourceNames.length; i++) {
-            var url = String.valueOf(getClass().getResource("/mazegame/game/images/%s".formatted(resourceNames[i])));
+            var url = String.valueOf(OrdinalImageStorage.class.getResource("/mazegame/game/images/%s".formatted(resourceNames[i])));
             System.out.println(url);
             try {
                 images[i] = new Image(url);
