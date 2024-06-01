@@ -6,7 +6,7 @@
     <artifactId>homework-template-project</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
-    <description>A simple maze runner game.</description>
+    <description>A maze game where the monster wants to catch the player, and the player wants to get out.</description>
     <developers>
         <developer>
             <name>Sándor Székelyhidi</name>
