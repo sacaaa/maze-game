@@ -1,7 +1,6 @@
 package mazegame.game.controller;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -61,5 +60,4 @@ public class TableViewController {
         observableList.addAll(new JsonOnePlayerGameResultManager(Path.of("results.json")).getBestByNumberOfMoves(NUMBER_OF_ROWS_TO_SHOW));
         tableView.setItems(observableList);
     }
-
 }
