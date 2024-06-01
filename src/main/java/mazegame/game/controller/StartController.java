@@ -19,6 +19,10 @@ public class StartController {
     @FXML
     public void initialize() {
         startGameButton.setOnAction(event -> {
+            if (playerNameField.getText().isEmpty()) {
+                return;
+            }
+
             try {
                 MainApplication.getInstance().switchScene("/mazegame/game/fxml/game.fxml", playerNameField.getText());
             } catch (IOException e) {
