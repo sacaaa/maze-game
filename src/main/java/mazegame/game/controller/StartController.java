@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import mazegame.game.MainApplication;
+import org.tinylog.Logger;
 
 import java.io.IOException;
 
@@ -21,7 +22,7 @@ public class StartController {
             try {
                 MainApplication.getInstance().switchScene("/mazegame/game/fxml/game.fxml", playerNameField.getText());
             } catch (IOException e) {
-                e.printStackTrace();
+                Logger.error(e, "Failed to switch scene");
             }
         });
     }
