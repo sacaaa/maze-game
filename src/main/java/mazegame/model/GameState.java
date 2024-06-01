@@ -144,6 +144,10 @@ public class GameState implements State<Direction> {
      */
     @Override
     public boolean isLegalMove(Direction direction) {
+        if (isSolved()) {
+            return false;
+        }
+
         var currentMap = getCurrentMap();
         var block = currentMap.blocks().
                 get(getPosition(PLAYER).row()).
