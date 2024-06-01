@@ -58,6 +58,7 @@ public class GameState implements State<Direction> {
      * Constructs a new GameState with the specified maps.
      *
      * @param maps the maps of the game
+     * @param mapIndex the index of the current map
      */
     public GameState(Maps maps, int mapIndex) {
         this.maps = maps;
