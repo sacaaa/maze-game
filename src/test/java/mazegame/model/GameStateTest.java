@@ -22,8 +22,7 @@ class GameStateTest {
 
     @BeforeEach
     void init() {
-        Maps.loadMaps("/mazegame/map/maps.json");
-        maps = Maps.getInstance();
+        maps = new Maps("/mazegame/map/maps.json");
 
         gameState1 = new GameState(maps, 1);
         for (var i = 0; i < 4; i++) {

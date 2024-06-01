@@ -11,16 +11,8 @@ class MapsTest {
 
     @BeforeEach
     void loadMaps() {
-        Maps.loadMaps("/mazegame/map/maps.json");
-        maps = Maps.getInstance();
-        assertThrows(NullPointerException.class, () -> Maps.loadMaps("mazegame/map/maps.json"));
-    }
-
-    @Test
-    void getInstance() {
-        Maps.loadMaps("/mazegame/map/maps.json");
-        var maps = Maps.getInstance();
-        assertThrows(IllegalArgumentException.class, () -> maps.getMap(0));
+        maps = new Maps("/mazegame/map/maps.json");
+        assertThrows(NullPointerException.class, () -> new Maps("mazegame/map/maps.json"));
     }
 
     @Test

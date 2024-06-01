@@ -9,8 +9,7 @@ public class Main {
 
     public static void main(String[] args) {
         // Load the maps
-        Maps.loadMaps("/mazegame/map/maps.json");
-        var maps = Maps.getInstance();
+        var maps = new Maps("/mazegame/map/maps.json");
 
         // Solve the game
         var bfs = new BreadthFirstSearch<Direction>();
