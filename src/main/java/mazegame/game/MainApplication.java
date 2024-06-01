@@ -1,7 +1,6 @@
 package mazegame.game;
 
 import gameresult.OnePlayerGameResult;
-import gameresult.manager.OnePlayerGameResultManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,7 +10,6 @@ import lombok.Getter;
 import org.tinylog.Logger;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.Objects;
