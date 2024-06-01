@@ -112,9 +112,7 @@ public class GameController {
 
     private void createState() {
         // Load the maps
-        Maps.loadMaps("/mazegame/map/maps.json");
-        var maps = Maps.getInstance();
-
+        var maps = new Maps("/mazegame/map/maps.json");
         state = new GameState(maps, 1);
         state.solvedProperty().addListener(this::handleSolved);
     }
