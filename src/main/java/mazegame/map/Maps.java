@@ -2,7 +2,6 @@ package mazegame.map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
-import lombok.extern.java.Log;
 import mazegame.solver.Main;
 import org.tinylog.Logger;
 
