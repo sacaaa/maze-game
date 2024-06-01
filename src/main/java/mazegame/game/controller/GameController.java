@@ -24,53 +24,28 @@ import util.OrdinalImageStorage;
 import util.javafx.ImageStorage;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Optional;
 
-/**
- * The controller class for the game view.
- */
 public class GameController {
 
-    /**
-     * The image storage for the images.
-     */
     private static final ImageStorage<Integer> imageStorage = new OrdinalImageStorage(GameController.class,
             "player.png",
             "monster.png");
 
-    /**
-     * The number of moves.
-     */
     private final IntegerProperty numberOfMoves = new SimpleIntegerProperty(0);
 
-    /**
-     * The game state.
-     */
     private GameState state;
 
-    /**
-     * The grid pane to display the map.
-     */
     @FXML
     private GridPane grid;
 
-    /**
-     * The text field to display the number of moves.
-     */
     @FXML
     private TextField numberOfMovesField;
 
-    /**
-     * The text field to display the name of the player.
-     */
     @FXML
     private Label playerNameLabel;
 
-    /**
-     * Handles the key press event.
-     *
-     * @param keyEvent the key event
-     */
     @FXML
     private void handleKeyPress(KeyEvent keyEvent) {
         var restartKeyCombination = new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN);
@@ -96,11 +71,6 @@ public class GameController {
         }
     }
 
-    /**
-     * Handles the mouse click event.
-     *
-     * @param event the mouse event
-     */
     @FXML
     private void handleMouseClick(MouseEvent event) {
         var source = (Node) event.getSource();
@@ -111,9 +81,6 @@ public class GameController {
                 () -> Logger.warn("Click does not correspond to any of the directions"));
     }
 
-    /**
-     * Initializes the controller class.
-     */
     @FXML
     private void initialize() {
         bindNumberOfMoves();
@@ -121,21 +88,10 @@ public class GameController {
         restartGame();
     }
 
-    /**
-     * Binds the number of moves to the text field.
-     */
     private void bindNumberOfMoves() {
         numberOfMovesField.textProperty().bind(numberOfMoves.asString());
     }
 
-    /**
-     * Creates a binding to check if the piece is on the position.
-     *
-     * @param index the index of the piece
-     * @param row the row of the position
-     * @param col the column of the position
-     * @return the binding
-     */
     private BooleanBinding createBindingToCheckPieceIsOnPosition(int index, int row, int col) {
         return new BooleanBinding() {
             {
@@ -149,23 +105,12 @@ public class GameController {
         };
     }
 
-    /**
-     * Creates an image view for the piece on the position.
-     *
-     * @param index the index of the piece
-     * @param row the row of the position
-     * @param col the column of the position
-     * @return the image view
-     */
     private ImageView createImageViewForPieceOnPosition(int index, int row, int col) {
         var imageView = new ImageView(imageStorage.get(index).orElseThrow());
         imageView.visibleProperty().bind(createBindingToCheckPieceIsOnPosition(index, row, col));
         return imageView;
     }
 
-    /**
-     * Creates the game state.
-     */
     private void createState() {
         // Load the maps
         Maps.loadMaps("/mazegame/map/maps.json");
@@ -175,14 +120,6 @@ public class GameController {
         state.solvedProperty().addListener(this::handleSolved);
     }
 
-    /**
-     * Creates a square for the map.
-     *
-     * @param row the row of the square
-     * @param col the column of the square
-     * @param block the block of the square
-     * @return the square
-     */
     private StackPane createSquare(int row, int col, Block block) {
         var square = new StackPane();
         square.getStyleClass().add("square");
@@ -212,27 +149,15 @@ public class GameController {
         return square;
     }
 
-    /**
-     * Saves the result and switches to the leaderboard scene.
-     *
-     * @param solved whether the game was solved
-     */
     private void endGame(boolean solved) {
         try {
             MainApplication.getInstance().saveResult(solved, numberOfMoves.get());
             MainApplication.getInstance().switchScene("/mazegame/game/fxml/leaderboard.fxml");
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.error(e, "Failed to switch scene or save result");
         }
     }
 
-    /**
-     * Handles the solved property change.
-     *
-     * @param observableValue the observable value
-     * @param oldValue the old value
-     * @param newValue the new value
-     */
     private void handleSolved(ObservableValue<? extends Boolean> observableValue, Boolean oldValue, Boolean newValue) {
         if (newValue) {
             Platform.runLater(() -> showAlert(
@@ -243,9 +168,6 @@ public class GameController {
         }
     }
 
-    /**
-     * Initializes the map.
-     */
     private void initMap() {
         var map = state.getCurrentMap();
         grid.getChildren().clear();  // Clear the existing cells
@@ -258,13 +180,6 @@ public class GameController {
         }
     }
 
-    /**
-     * Gets the direction from the click.
-     *
-     * @param row the row of the click
-     * @param col the column of the click
-     * @return an optional direction
-     */
     private Optional<Direction> getDirectionFromClick(int row, int col) {
         var positionOfBlock = state.getPosition(GameState.PLAYER);
         try {
@@ -275,11 +190,6 @@ public class GameController {
         return Optional.empty();
     }
 
-    /**
-     * Makes a move if it is legal.
-     *
-     * @param direction the direction to move
-     */
     private void makeMoveIfLegal(Direction direction) {
         if (state.isLegalMove(direction)) {
             Logger.info("Moving {}", direction);
@@ -300,16 +210,10 @@ public class GameController {
         }
     }
 
-    /**
-     * Registers the key event handler for the grid.
-     */
     private void registerKeyEventHandler() {
         Platform.runLater(() -> grid.getScene().setOnKeyPressed(this::handleKeyPress));
     }
 
-    /**
-     * Restarts the game.
-     */
     private void restartGame() {
         createState();
         numberOfMoves.set(0);
@@ -317,15 +221,6 @@ public class GameController {
         initMap();
     }
 
-    /**
-     * Shows an alert by the given parameters.
-     * Shows when the game is solved or the player is caught by the monster.
-     *
-     * @param alertType the type of the alert
-     * @param headerText the header text of the alert
-     * @param contentText the content text of the alert
-     * @param solved whether the game is solved
-     */
     private void showAlert(Alert.AlertType alertType, String headerText, String contentText, boolean solved) {
         var alert = new Alert(alertType);
         alert.setHeaderText(headerText);
