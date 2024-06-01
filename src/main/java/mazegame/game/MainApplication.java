@@ -35,7 +35,7 @@ public class MainApplication extends Application {
     }
 
     public void switchScene(String fxml) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(MainApplication.class.getResource(fxml)));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxml)));
         stage.setScene(new Scene(root));
         stage.centerOnScreen();
         stage.show();
@@ -45,7 +45,7 @@ public class MainApplication extends Application {
     public void switchScene(String fxml, String playerName) throws IOException {
         this.playerName = playerName;
         this.created = ZonedDateTime.now();
-        Parent root = FXMLLoader.load(Objects.requireNonNull(MainApplication.class.getResource(fxml)));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxml)));
         stage.setScene(new Scene(root));
         stage.centerOnScreen();
         stage.show();
