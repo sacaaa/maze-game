@@ -24,7 +24,6 @@ import util.OrdinalImageStorage;
 import util.javafx.ImageStorage;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Optional;
 
 public class GameController {
