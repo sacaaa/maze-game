@@ -8,10 +8,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lombok.Getter;
+import org.tinylog.Logger;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 public class MainApplication extends Application {
 
@@ -34,19 +37,21 @@ public class MainApplication extends Application {
     }
 
     public void switchScene(String fxml) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource(fxml));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(MainApplication.class.getResource(fxml)));
         stage.setScene(new Scene(root));
         stage.centerOnScreen();
         stage.show();
+        Logger.debug("Switched to scene: {}", fxml);
     }
 
     public void switchScene(String fxml, String playerName) throws IOException {
         this.playerName = playerName;
         this.created = ZonedDateTime.now();
-        Parent root = FXMLLoader.load(getClass().getResource(fxml));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(MainApplication.class.getResource(fxml)));
         stage.setScene(new Scene(root));
         stage.centerOnScreen();
         stage.show();
+        Logger.debug("Switched to scene: {}", fxml);
     }
 
     public void saveResult(boolean solved, int numberOfMoves) throws IOException {
