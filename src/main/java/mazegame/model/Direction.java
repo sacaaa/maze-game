@@ -13,10 +13,23 @@ public enum Direction {
     DOWN(1, 0),
     LEFT(0, -1);
 
+    /**
+     * The change in the row coordinate.
+     */
     private final int rowChange;
+
+    /**
+     * The change in the column coordinate.
+     */
     private final int colChange;
 
-    private Direction(int rowChange, int colChange) {
+    /**
+     * Constructs a new direction with the specified coordinate changes.
+     *
+     * @param rowChange the change in the row coordinate
+     * @param colChange the change in the column coordinate
+     */
+    Direction(int rowChange, int colChange) {
         this.rowChange = rowChange;
         this.colChange = colChange;
     }
