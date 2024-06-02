@@ -20,6 +20,9 @@ class GameStateTest {
 
     GameState gameState4;
 
+    GameState gameState5;
+
+
     @BeforeEach
     void init() {
         maps = new Maps("/mazegame/map/maps.json");
@@ -43,6 +46,8 @@ class GameStateTest {
         for (var i = 0; i < 4; i++) {
             gameState4.makeMove(Direction.DOWN);
         }
+
+        gameState5 = new GameState(maps, 1);
     }
 
     @Test
@@ -75,6 +80,22 @@ class GameStateTest {
         assertTrue(gameState3.isLegalMove(Direction.LEFT));
         assertFalse(gameState3.isLegalMove(Direction.RIGHT));
         assertFalse(gameState3.isLegalMove(Direction.DOWN));
+    }
+
+    @Test
+    void state4_isLegalMove() {
+        assertTrue(gameState4.isLegalMove(Direction.UP));
+        assertTrue(gameState4.isLegalMove(Direction.LEFT));
+        assertTrue(gameState4.isLegalMove(Direction.RIGHT));
+        assertTrue(gameState4.isLegalMove(Direction.DOWN));
+    }
+
+    @Test
+    void state5_isLegalMove() {
+        assertFalse(gameState5.isLegalMove(Direction.UP));
+        assertFalse(gameState5.isLegalMove(Direction.LEFT));
+        assertFalse(gameState5.isLegalMove(Direction.DOWN));
+        assertTrue(gameState5.isLegalMove(Direction.RIGHT));
     }
 
     @Test
@@ -122,6 +143,7 @@ class GameStateTest {
         assertEquals(EnumSet.of(Direction.RIGHT, Direction.DOWN, Direction.LEFT), gameState2.getLegalMoves());
         assertEquals(EnumSet.of(Direction.UP, Direction.LEFT), gameState3.getLegalMoves());
         assertEquals(EnumSet.allOf(Direction.class), gameState4.getLegalMoves());
+        assertEquals(EnumSet.of(Direction.RIGHT), gameState5.getLegalMoves());
     }
 
     @Test
@@ -156,6 +178,7 @@ class GameStateTest {
         assertEquals("[(0,1),(2,1),(0,4)]", gameState2.toString());
         assertEquals("[(1,1),(2,1),(0,4)]", gameState3.toString());
         assertEquals("[(4,3),(4,3),(0,4)]", gameState4.toString());
+        assertEquals("[(0,0),(3,2),(0,4)]", gameState5.toString());
     }
 
 }
