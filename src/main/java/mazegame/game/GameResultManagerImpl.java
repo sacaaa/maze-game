@@ -14,6 +14,14 @@ public class GameResultManagerImpl implements OnePlayerGameResultManager {
 
     private List<OnePlayerGameResult> results = new ArrayList<>();
 
+    public void save() throws IOException {
+        OnePlayerGameResultManager manager = new JsonOnePlayerGameResultManager(Path.of("results.json"));
+        for (var state : results) {
+            manager.add(state);
+            Logger.info("Game result saved: {}", state);
+        }
+    }
+
     @Override
     public List<OnePlayerGameResult> add(OnePlayerGameResult result) throws IOException {
         results.add(result);
@@ -25,11 +33,4 @@ public class GameResultManagerImpl implements OnePlayerGameResultManager {
         return new ArrayList<>(results);
     }
 
-    public void save() throws IOException {
-        OnePlayerGameResultManager manager = new JsonOnePlayerGameResultManager(Path.of("results.json"));
-        for (var state : results) {
-            manager.add(state);
-            Logger.info("Game result saved: {}", state);
-        }
-    }
 }
