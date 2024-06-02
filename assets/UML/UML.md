@@ -41,4 +41,4 @@ The game package contains classes related to the GUI and game management.
 - **TableViewController**, **StartController**, and **GameController** depend on the **MainApplication** to manage the game state and scene switching.
 - The **GameState** interacts with **Maps**, **Position**, and **Direction** classes to manage the game logic and entity positions.
 
-![Maze Game Components Overview](mazegame.svg)[]
+![Maze Game Components Overview](mazegame.svg)
