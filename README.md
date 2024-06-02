@@ -77,9 +77,3 @@ Egyébként ha felfelé vagy lefelé mozoghat egy mezőt, miközben közelebb ke
 The game consists of the following components:
 
 - [Components description](assets/UML/UML.md)
-
-## UML Diagram
-
-The UML diagram below shows the relationships between the components:
-
-![](assets/UML/mazegame-game.svg)
