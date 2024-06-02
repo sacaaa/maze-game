@@ -48,4 +48,9 @@ public record MapData(@JsonProperty("id") int id, @JsonProperty("name") String n
         this.blocks = blocks;
     }
 
+    @Override
+    public String toString() {
+        return String.format("MapData{id=%d, name='%s', rows=%d, cols=%d, blocks=%d}", id, name, rows, cols, blocks.size()*blocks.getFirst().size());
+    }
+
 }
