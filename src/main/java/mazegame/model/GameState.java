@@ -20,26 +20,6 @@ import java.util.*;
 public class GameState implements State<Direction> {
 
     /**
-     * The maps of the game.
-     */
-    private final Maps maps;
-
-    /**
-     * The index of the current map.
-     */
-    private final int mapIndex;
-
-    /**
-     * The positions of the player, monster, and end.
-     */
-    private final ReadOnlyObjectWrapper<Position>[] positions;
-
-    /**
-     * The solved property.
-     */
-    private final ReadOnlyBooleanWrapper solved;
-
-    /**
      * The index of the player in the positions array.
      */
     public static final int PLAYER = 0;
@@ -53,6 +33,26 @@ public class GameState implements State<Direction> {
      * The index of the end in the positions array.
      */
     public static final int END = 2;
+
+    /**
+     * The index of the current map.
+     */
+    private final int mapIndex;
+
+    /**
+     * The maps of the game.
+     */
+    private final Maps maps;
+
+    /**
+     * The positions of the player, monster, and end.
+     */
+    private final ReadOnlyObjectWrapper<Position>[] positions;
+
+    /**
+     * The solved property.
+     */
+    private final ReadOnlyBooleanWrapper solved;
 
     /**
      * Constructs a new GameState with the specified maps.
@@ -91,74 +91,41 @@ public class GameState implements State<Direction> {
     }
 
     /**
-     * Checks if the game is solved.
+     * Gets the current map.
      *
-     * @return true if the player is on the end position, false otherwise
+     * @return the current map
      */
-    @Override
-    public boolean isSolved() {
-        return getPosition(PLAYER).equals(getPosition(END));
+    public MapData getCurrentMap() {
+        return maps.getMap(mapIndex);
     }
 
     /**
-     * Returns the legal moves of the player.
+     * Gets the position of the character at the specified index.
      *
-     * @return the legal moves of the player
+     * @param index the index of the character
+     * @return the position of the character
      */
-    @Override
-    public Set<Direction> getLegalMoves() {
-        var legalMoves = EnumSet.noneOf(Direction.class);
-        for (var direction : Direction.values()) {
-            if (isLegalMove(direction)) {
-                legalMoves.add(direction);
-            }
-        }
-        return legalMoves;
+    public Position getPosition(int index) {
+        return positions[index].get();
     }
 
     /**
-     * Checks if the monster can move in the given direction.
+     * Gets the position of the character at the specified index as a read-only object property.
      *
-     * @param direction the direction to move
-     * @return true if the monster can move in the given direction, false otherwise
+     * @param index the index of the character
+     * @return the position of the character as a read-only object property
      */
-    private boolean isLegalMoveMonster(Direction direction) {
-        var currentMap = getCurrentMap();
-        var block = currentMap.blocks().
-                get(getPosition(MONSTER).row()).
-                get(getPosition(MONSTER).col());
-
-        return switch (direction) {
-            case UP -> canMoveUp(currentMap, block, MONSTER);
-            case RIGHT -> canMoveRight(currentMap, block, MONSTER);
-            case DOWN -> canMoveDown(currentMap, block, MONSTER);
-            case LEFT -> canMoveLeft(currentMap, block, MONSTER);
-        };
+    public ReadOnlyObjectProperty<Position> positionProperty(int index) {
+        return positions[index].getReadOnlyProperty();
     }
 
     /**
-     * Checks if the player can move in the given direction.
+     * Gets the solved property as a read-only boolean property.
      *
-     * @param direction the direction to move
-     * @return true if the player can move in the given direction, false otherwise
+     * @return the solved property
      */
-    @Override
-    public boolean isLegalMove(Direction direction) {
-        if (isSolved()) {
-            return false;
-        }
-
-        var currentMap = getCurrentMap();
-        var block = currentMap.blocks().
-                get(getPosition(PLAYER).row()).
-                get(getPosition(PLAYER).col());
-
-        return switch (direction) {
-            case UP -> canMoveUp(currentMap, block, PLAYER);
-            case RIGHT -> canMoveRight(currentMap, block, PLAYER);
-            case DOWN -> canMoveDown(currentMap, block, PLAYER);
-            case LEFT -> canMoveLeft(currentMap, block, PLAYER);
-        };
+    public ReadOnlyBooleanProperty solvedProperty() {
+        return solved.getReadOnlyProperty();
     }
 
     /**
@@ -246,29 +213,23 @@ public class GameState implements State<Direction> {
     }
 
     /**
-     * Tries to move the monster towards the player.
+     * Checks if the monster can move in the given direction.
+     *
+     * @param direction the direction to move
+     * @return true if the monster can move in the given direction, false otherwise
      */
-    private void tryToMoveMonster() {
-        Position playerPos = getPosition(PLAYER);
-        Position monsterPos = getPosition(MONSTER);
+    private boolean isLegalMoveMonster(Direction direction) {
+        var currentMap = getCurrentMap();
+        var block = currentMap.blocks().
+                get(getPosition(MONSTER).row()).
+                get(getPosition(MONSTER).col());
 
-        int distanceX = playerPos.col() - monsterPos.col();
-        int distanceY = playerPos.row() - monsterPos.row();
-
-        int stepsTaken = 0;
-
-        // Move horizontally first
-        stepsTaken += moveInDirection(distanceX, Direction.RIGHT, Direction.LEFT, stepsTaken);
-
-        // Move vertically if steps left
-        if (stepsTaken < 2) {
-            stepsTaken += moveInDirection(distanceY, Direction.DOWN, Direction.UP, stepsTaken);
-        }
-
-        // Move horizontally again if steps left
-        if (stepsTaken < 2 && distanceX != 0) {
-            moveInDirection(distanceX, Direction.RIGHT, Direction.LEFT, stepsTaken);
-        }
+        return switch (direction) {
+            case UP -> canMoveUp(currentMap, block, MONSTER);
+            case RIGHT -> canMoveRight(currentMap, block, MONSTER);
+            case DOWN -> canMoveDown(currentMap, block, MONSTER);
+            case LEFT -> canMoveLeft(currentMap, block, MONSTER);
+        };
     }
 
     /**
@@ -311,6 +272,83 @@ public class GameState implements State<Direction> {
     }
 
     /**
+     * Tries to move the monster towards the player.
+     */
+    private void tryToMoveMonster() {
+        Position playerPos = getPosition(PLAYER);
+        Position monsterPos = getPosition(MONSTER);
+
+        int distanceX = playerPos.col() - monsterPos.col();
+        int distanceY = playerPos.row() - monsterPos.row();
+
+        int stepsTaken = 0;
+
+        // Move horizontally first
+        stepsTaken += moveInDirection(distanceX, Direction.RIGHT, Direction.LEFT, stepsTaken);
+
+        // Move vertically if steps left
+        if (stepsTaken < 2) {
+            stepsTaken += moveInDirection(distanceY, Direction.DOWN, Direction.UP, stepsTaken);
+        }
+
+        // Move horizontally again if steps left
+        if (stepsTaken < 2 && distanceX != 0) {
+            moveInDirection(distanceX, Direction.RIGHT, Direction.LEFT, stepsTaken);
+        }
+    }
+
+    /**
+     * Returns the legal moves of the player.
+     *
+     * @return the legal moves of the player
+     */
+    @Override
+    public Set<Direction> getLegalMoves() {
+        var legalMoves = EnumSet.noneOf(Direction.class);
+        for (var direction : Direction.values()) {
+            if (isLegalMove(direction)) {
+                legalMoves.add(direction);
+            }
+        }
+        return legalMoves;
+    }
+
+    /**
+     * Checks if the player can move in the given direction.
+     *
+     * @param direction the direction to move
+     * @return true if the player can move in the given direction, false otherwise
+     */
+    @Override
+    public boolean isLegalMove(Direction direction) {
+        if (isSolved()) {
+            return false;
+        }
+
+        var currentMap = getCurrentMap();
+        var block = currentMap.blocks().
+                get(getPosition(PLAYER).row()).
+                get(getPosition(PLAYER).col());
+
+        return switch (direction) {
+            case UP -> canMoveUp(currentMap, block, PLAYER);
+            case RIGHT -> canMoveRight(currentMap, block, PLAYER);
+            case DOWN -> canMoveDown(currentMap, block, PLAYER);
+            case LEFT -> canMoveLeft(currentMap, block, PLAYER);
+        };
+    }
+
+    /**
+     * Checks if the game is solved.
+     *
+     * @return true if the player is on the end position, false otherwise
+     */
+    @Override
+    public boolean isSolved() {
+        return getPosition(PLAYER).equals(getPosition(END));
+    }
+
+    /**
      * Makes a move in the given direction.
      *
      * @param direction the direction to move
@@ -332,44 +370,6 @@ public class GameState implements State<Direction> {
                 }
             }
         }
-    }
-
-    /**
-     * Gets the solved property as a read-only boolean property.
-     *
-     * @return the solved property
-     */
-    public ReadOnlyBooleanProperty solvedProperty() {
-        return solved.getReadOnlyProperty();
-    }
-
-    /**
-     * Gets the position of the character at the specified index as a read-only object property.
-     *
-     * @param index the index of the character
-     * @return the position of the character as a read-only object property
-     */
-    public ReadOnlyObjectProperty<Position> positionProperty(int index) {
-        return positions[index].getReadOnlyProperty();
-    }
-
-    /**
-     * Gets the position of the character at the specified index.
-     *
-     * @param index the index of the character
-     * @return the position of the character
-     */
-    public Position getPosition(int index) {
-        return positions[index].get();
-    }
-
-    /**
-     * Gets the current map.
-     *
-     * @return the current map
-     */
-    public MapData getCurrentMap() {
-        return maps.getMap(mapIndex);
     }
 
     /**
