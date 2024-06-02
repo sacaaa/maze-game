@@ -34,6 +34,19 @@ public class MainApplication extends Application {
         instance = this;
     }
 
+    public void saveResult(boolean solved, int numberOfMoves) throws IOException {
+        var now = ZonedDateTime.now();
+        var duration = Duration.ofSeconds(now.toEpochSecond() - created.toEpochSecond());
+        manager.add(OnePlayerGameResult.builder()
+                .playerName(this.playerName)
+                .solved(solved)
+                .numberOfMoves(numberOfMoves)
+                .duration(duration)
+                .created(this.created)
+                .build());
+        manager.save();
+    }
+
     public void switchScene(String fxml) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxml)));
         stage.setScene(new Scene(root));
@@ -50,19 +63,6 @@ public class MainApplication extends Application {
         stage.centerOnScreen();
         stage.show();
         Logger.debug("Switched to scene: {}", fxml);
-    }
-
-    public void saveResult(boolean solved, int numberOfMoves) throws IOException {
-        var now = ZonedDateTime.now();
-        var duration = Duration.ofSeconds(now.toEpochSecond() - created.toEpochSecond());
-        manager.add(OnePlayerGameResult.builder()
-                .playerName(this.playerName)
-                .solved(solved)
-                .numberOfMoves(numberOfMoves)
-                .duration(duration)
-                .created(this.created)
-                .build());
-        manager.save();
     }
 
     @Override
