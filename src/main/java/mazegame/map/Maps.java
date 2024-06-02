@@ -22,12 +22,27 @@ import java.util.stream.Collectors;
 @Getter
 public class Maps {
 
+    /**
+     * The list of maps.
+     */
     private final List<MapData> maps = new ArrayList<>();
 
+    /**
+     * Constructs a new maps with the specified file path.
+     *
+     * @param filePath the file path of the maps
+     */
     public Maps(String filePath) {
         loadMaps(filePath);
     }
 
+    /**
+     * Returns the map with the specified id.
+     *
+     * @param id the id of the map
+     * @return the map with the specified id
+     * @throws IllegalArgumentException if no map found with the specified id
+     */
     public MapData getMap(int id) {
         return maps.stream()
                 .filter(map -> map.id() == id)
@@ -35,6 +50,12 @@ public class Maps {
                 .orElseThrow(() -> new IllegalArgumentException("No map found with id: " + id));
     }
 
+    /**
+     * Loads the maps from the specified file path.
+     *
+     * @param filePath the file path of the maps
+     * @throws IllegalArgumentException if the file path is invalid
+     */
     private void loadMaps(String filePath) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -47,6 +68,10 @@ public class Maps {
         }
     }
 
+    @Override
+    public String toString() {
+        return String.format("Maps{Loaded maps=%d}", maps.size());
+    }
 
 }
 
