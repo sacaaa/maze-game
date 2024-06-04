@@ -2,11 +2,6 @@
 
 In this university software development project, I've created a maze game using JavaFX. Players navigate a maze grid to reach the exit while avoiding a chasing monster. The player, depicted by a character icon, must maneuver through walls and obstacles to escape.
 
-The objective of the game is for the player to find the
-exit without being caught by the monster.
-The blue square represents the player, the black square represents
-the monster.
-
 ![](assets/maze-game.png)
 
 ## Task
