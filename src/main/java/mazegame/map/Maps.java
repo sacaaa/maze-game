@@ -60,8 +60,7 @@ public class Maps {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             InputStream resourceStream = getClass().getResourceAsStream(filePath);
-            String jsonContent = new BufferedReader(new InputStreamReader(resourceStream)).lines().collect(Collectors.joining("\n"));
-            List<MapData> loadedMaps = objectMapper.readValue(jsonContent, new TypeReference<List<MapData>>() {});
+            List<MapData> loadedMaps = objectMapper.readValue(resourceStream, new TypeReference<List<MapData>>() {});
             maps.addAll(loadedMaps);
         } catch (IOException e) {
             Logger.error(e, "Failed to load maps from file: {}", filePath);
