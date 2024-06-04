@@ -1,6 +1,6 @@
 # Maze Game
 
-In this university software development project, I've created a maze game using JavaFX. Players navigate a maze grid to reach the exit while avoiding a chasing monster. The player, depicted by a character icon, must maneuver through walls and obstacles to escape.
+In this project, I've created a maze game using JavaFX. Players navigate a maze grid to reach the exit while avoiding a chasing monster.
 
 ![](assets/maze-game.png)
 
